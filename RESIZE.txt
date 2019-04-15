@@ -1,0 +1,21 @@
+# 1024pixel to 32pixel. RESIZE
+import os
+import cv2
+import numpy as np
+
+path='D://jpggg//' # jpg로 확장자명 바꿔서 저장해 둔 사진폴더
+file_list = os.listdir(path)  
+image_list = np.array( [cv2.imread(path+str(k)) for k in file_list] )
+
+try:
+    os.mkdir("d:\\b\\test100_resize")
+except:
+    0
+path='D://jpggg//'
+file_list = os.listdir(path)
+for j , i in enumerate(file_list):
+    img = cv2.imread(path+str(i))
+    width, height = img.shape[:2]
+    resize = cv2.resize(img, (int(width / 32), int(height / 32)), interpolation=cv2.INTER_CUBIC)
+#원하는게 32*32 라서. 1024/32=32
+    cv2.imwrite("d:\\b\\test100_resize\\" + str(i) ,resize)

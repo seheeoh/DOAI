@@ -1,0 +1,35 @@
+#### 이미지 전처리: 회전, 반전
+import cv2 as cv
+import matplotlib.pyplot as plt
+img = 'D:\\Downloads\\rsna-pneumonia-detection-challenge\\rotation\\2d9bfa9e-b4c9-4ab2-98d6-f821d61435e2.jpg'
+img = plt.imread(img)
+plt.imshow(img)
+
+## R_180
+img = cv.imread(img) #plt.imread 도 상관없다. 둘 중 돌아가는 걸로!
+img = cv.rotate(img, cv.ROTATE_180)
+#img = cv.rotate(img, 1) # 180도 회전은 1로 표현 가능하다.
+plt.imshow(img)
+
+## R_90
+img = plt.imread(img)
+img = cv.rotate(img, cv.ROTATE_90_CLOCKWISE)
+#img = cv.rotate(img, 2)
+plt.imshow(img)
+
+## R_reverse_90
+img = plt.imread(img)
+img = cv.rotate(img, cv.ROTATE_90_COUNTERCLOCKWISE) #역시계방향
+#img = cv.rotate(img, 0)
+plt.imshow(img)
+
+## Mirror
+img = plt.imread(img)
+img = cv.flip(img, 1) 
+plt.imshow(img)
+
+## Mirror 상하 반전
+img = plt.imread(img)
+img = cv.flip(img, 0)  # 거울효과
+plt.imshow(img)
+

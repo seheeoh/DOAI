@@ -1,0 +1,74 @@
+####### train, validation 나누기
+import os
+import cv2
+import csv
+
+### train 라벨링 30228개, train 이미지 26684개
+### 일치하지 않아서 매칭작업함.
+
+def image_name(): # 확장자명 떼서 이미지 이름만 가져오기
+    Imname=[]
+    path='D:\\Downloads\\rsna-pneumonia-detection-challenge\\train_resize\\'    
+    file_list=os.listdir(path)
+    for i in file_list:
+        Imname.append(i[:-4])    
+    return Imname
+    
+def labelling(): # patientID, label 가져오기
+    Labname=[]
+    file=open('D:\\Downloads\\rsna-pneumonia-detection-challenge\\stage_2_train_labels.csv')
+    f = csv.reader(file)    
+    for i in f:
+        Labname.append(i[0])  
+        Labname.append(i[5])  
+    return Labname
+
+
+def matching5000(im): # 5000 폴더에 이미지 복사
+    try:
+        f='D:\\Downloads\\rsna-pneumonia-detection-challenge\\5000'
+        os.mkdir(f)
+    except:
+        0
+    path='D:\\Downloads\\rsna-pneumonia-detection-challenge\\train_resize\\'+str(im)+'.jpg'
+    img = cv2.imread(path) 
+    cv2.imwrite( str(f) + "\\" + str(im)+ '.jpg', img )    
+    return print("complete")
+
+
+
+def excel_write(label): # 매칭시킨 사진 새로운 csv 파일에 라벨writting
+    file=open('D:\\Downloads\\rsna-pneumonia-detection-challenge\\label5000.csv','w',encoding='utf-8',newline='')
+    wr = csv.writer(file)
+    e=[]
+    for idx, i in enumerate(label):
+        if i!='0' and  i!='1':
+            e.append([idx,i])
+        wr.writerow([i])  
+    return print('e:',e, len(e))
+
+
+def matching(): # 라벨링과 일치하는 이미지 고르기
+    cnt=0
+    check=[]
+    excel_label=[]
+    im=image_name()
+    la=patientID()
+    for i in im:
+        for j in range(2, len(la), 2 ): # test 5000부터
+            if i==la[j]:
+                #print(la[j])
+                cnt+=1
+                check.append(i)
+                excel_label.append(la[j+1])   
+                #print(excel_label)                
+                matching5000(i)                
+                del(la[la.index(la[j])])  #작업수가 많아지면 del 쓰지말 것
+                del(la[la.index(la[j+1])])
+                break
+            if cnt>4999: # 원하는 사진 수에 따라 조절 가능
+                break
+    excel_write( excel_label )
+    return print('ok')
+
+matching()
